@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using tareas_api.Data;
 
 namespace tareas_api
 {
@@ -13,6 +15,11 @@ namespace tareas_api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var connectionString = builder.Configuration.GetConnectionString("MySql");
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseMySql(connectionString,
+            ServerVersion.AutoDetect(connectionString)));
 
             var app = builder.Build();
 
