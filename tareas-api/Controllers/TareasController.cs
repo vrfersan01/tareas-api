@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data.SqlTypes;
 using tareas_api.Data;
 using tareas_api.Models;
@@ -18,16 +19,18 @@ namespace tareas_api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Tarea>> ObtenerTodas()
+        public async Task<ActionResult<List<Tarea>>> ObtenerTodas()
         {
-            List<Tarea> tareas = _context.Tareas.ToList();
+            List<Tarea> tareas = await _context.Tareas.ToListAsync();
+
             return Ok(tareas);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Tarea> ObtenerPorId(int id)
+        public async Task<ActionResult<Tarea>> ObtenerPorId(int id)
         {
-            Tarea tarea = _context.Tareas.Find(id);
+            Tarea tarea = await _context.Tareas.FindAsync(id);
+
             ActionResult<Tarea> resultado;
 
             if(tarea == null)
@@ -40,22 +43,22 @@ namespace tareas_api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Tarea> Crear([FromBody] Tarea tarea)
+        public async Task<ActionResult<Tarea>> Crear([FromBody] Tarea tarea)
         {
             tarea.FechaCreacion = DateTime.Now;
             _context.Tareas.Add(tarea);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(ObtenerPorId),
                                     new { id = tarea.Id }, tarea);
         }
 
         [HttpPut("{id}")]
-        public IActionResult ActualizarTarea(int id, [FromBody]Tarea datos)
+        public async Task<IActionResult> ActualizarTarea(int id, [FromBody]Tarea datos)
         {
             IActionResult result;
 
-            Tarea tarea = _context.Tareas.Find(id);
+            Tarea tarea = await _context.Tareas.FindAsync(id);
             if(tarea == null)
                 result = NotFound();
             else
@@ -63,24 +66,24 @@ namespace tareas_api.Controllers
                 tarea.Titulo = datos.Titulo;
                 tarea.Descripcion = datos.Descripcion;
                 tarea.Completada = datos.Completada;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 result = NoContent();
             }
             return result;
         }
 
         [HttpDelete("{id}")]
-        public IActionResult BorrarTarea(int id)
+        public async Task<IActionResult> BorrarTarea(int id)
         {
             IActionResult result;
-            Tarea tarea = _context.Tareas.Find(id);
+            Tarea tarea = await _context.Tareas.FindAsync(id);
 
             if(tarea == null)
                 result= NotFound();
             else
             {
                 _context.Tareas.Remove(tarea);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 result= NoContent();
             }
             return result;

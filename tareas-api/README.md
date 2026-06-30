@@ -1,17 +1,11 @@
 ﻿# Tareas API
-API REST en ASP.NET Core para gestionar tareas. Version web del Gestor de
-Tareas, primer proyecto del Mes 2.
-## Endpoints
-- GET /api/tareas Lista todas las tareas
-- GET /api/tareas/{id} Obtiene una tarea
-- POST /api/tareas Crea una tarea
-- PUT /api/tareas/{id} Actualiza una tarea
-- DELETE /api/tareas/{id} Borra una tarea
+API REST en ASP.NET Core con persistencia en MySQL usando Entity Framework Core.
 ## Tecnologias
 - C# / .NET 8 / ASP.NET Core Web API
-- Documentacion con Swagger
+- Entity Framework Core (proveedor Pomelo para MySQL)
+- MySQL
 ## Como ejecutarlo
-1. Abrir la solucion en Visual Studio.
-2. Ejecutar con Ctrl+F5; se abre Swagger en el navegador.
-Nota: los datos se guardan en memoria y se reinician al parar la app.
-En la siguiente version se conectara a MySQL con Entity Framework.
+1. Crear la base de datos vacia en MySQL: CREATE DATABASE tareas_api;
+2. Poner tu cadena de conexion en appsettings.json.
+3. Aplicar las migraciones: Update-Database (Consola del Admin. de paquetes).
+4. Ejecutar con Ctrl+F5; se abre Swagger.
